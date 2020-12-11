@@ -1,0 +1,30 @@
+{
+  "name": "server-divided-we-stand",
+  "version": "1.0.0",
+  "description": "server",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Team2-FinalProject/Server-Divided-We-Stand.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Team2-FinalProject/Server-Divided-We-Stand/issues"
+  },
+  "homepage": "https://github.com/Team2-FinalProject/Server-Divided-We-Stand#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "socket.io": "^3.0.4"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3",
+    "nodemon": "^2.0.6",
+    "supertest": "^6.0.1"
+  }
+}
