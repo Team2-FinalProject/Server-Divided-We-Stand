@@ -12,10 +12,10 @@ module.exports = {
         type: Sequelize.STRING
       },
       TeamOneId: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       TeamTwoId: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
