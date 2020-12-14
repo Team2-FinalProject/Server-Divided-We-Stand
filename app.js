@@ -17,7 +17,8 @@ io.on("connection", (socket) => {
     let room = {
       id: payload.id,
       name: payload.roomName,
-      players: [],
+      teamOne: [],
+      teamTwo: [],
       status: false,
       isActive: false,
       roomMaster: payload.roomMaster
@@ -29,7 +30,12 @@ io.on("connection", (socket) => {
   socket.on('joinRoom', payload => {
     socket.join(payload.roomName, () => {
       const roomFind = rooms.find(e => e.id === payload.idRoom)
-      roomFind.players.push(payload.username)
+      console.log(roomFind, "<< room di join room server")
+      if(roomFind.teamOne.length === 3) {
+        roomFind.teamTwo.push(payload.username)
+      } else {
+        roomFind.teamOne.push(payload.username)
+      }
       roomFind.isActive = true
       activeRoom.push(roomFind)
       io.sockets.in(payload.roomName).emit('roomDetail', roomFind)
@@ -41,6 +47,7 @@ io.on("connection", (socket) => {
   socket.on('startGame', payload => {
     // console.log(payload)
     let room = activeRoom.find(e => e.id === payload.id)
+    // console.log(room, "<<< room start game")
     room.status = true
     io.sockets.in(room.name).emit('startGame', room)
   })
