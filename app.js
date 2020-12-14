@@ -1,48 +1,78 @@
-const cors = require('cors')
-const express = require('express')
-const app = express()
-const server = http.createServer(app)
-const socket = require('socket.io')
-const io = socket(server)
+const app = require("express")();
+const cors = require("cors");
+const http = require("http").createServer(app);
+const port = process.env.PORT || 3000;
+const io = require("socket.io")(http);
 
-const users = {}
-const socketToRoom = {}
+app.use(cors());
 
-io.on('connection', socket => {
-  socket.on("join room", roomID => {
-    if (users[roomID]) {
-      const length = users[roomID].length;
-      if (length === 3) {
-        socket.emit("room full");
-        return;
+let rooms = []
+let onlineUsers = []
+let activeRoom = []
+
+io.on("connection", (socket) => {
+  console.log("a user connected");
+
+  socket.on('createRoom', (payload) => {
+    let room = {
+      id: payload.id,
+      name: payload.roomName,
+      teamOne: [],
+      teamTwo: [],
+      status: false,
+      isActive: false,
+      roomMaster: payload.roomMaster
+    }
+    rooms.push(room)
+    io.emit('createRoom', rooms)
+  })
+
+  socket.on('joinRoom', payload => {
+    socket.join(payload.roomName, () => {
+      const roomFind = rooms.find(e => e.id === payload.idRoom)
+      console.log(roomFind, "<< room di join room server")
+      if(roomFind.teamOne.length === 3) {
+        roomFind.teamTwo.push(payload.username)
+      } else {
+        roomFind.teamOne.push(payload.username)
       }
-      users[roomID].push(socket.id);
-    } else {
-      users[roomID] = [socket.id];
+      roomFind.isActive = true
+      activeRoom.push(roomFind)
+      io.sockets.in(payload.roomName).emit('roomDetail', roomFind)
+      io.emit('activeRoom', activeRoom)
+      io.emit('joinRoom', rooms)
+    })
+  })
+
+  socket.on('startGame', payload => {
+    // console.log(payload)
+    let room = activeRoom.find(e => e.id === payload.id)
+    // console.log(room, "<<< room start game")
+    room.status = true
+    io.sockets.in(room.name).emit('startGame', room)
+  })
+
+  socket.on('action', (action) => {
+    if(action.type === 'server/players'){
+      console.log('Got hello data!', action.data);
+      onlineUsers.push(action.data)
+      socket.emit('action', { type:'SET_PLAYERS', payload: onlineUsers });
+    } else if ( action.type === 'server/online') {
+      socket.emit('action', {type:'SET_PLAYERS', payload: onlineUsers});
+    } else if ( action.type === 'server/createRoom') {
+      rooms.push(action.data)
+      socket.emit('action', {type: 'CREATE_ROOM', payload: rooms})
+    } else if ( action.type === 'server/rooms' ) {
+      socket.emit('action', {type: 'CREATE_ROOM', payload: rooms})
     }
-    socketToRoom[socket.id] = roomID;
-    const usersInThisRoom = users[roomID].filter(id => id !== socket.id);
+  })
 
-    socket.emit("all users", usersInThisRoom);
+  socket.on("disconnect", () => {
+    // ? event pada saat user disconnected
+    console.log("user disconnected");
   });
-
-  socket.on("sending signal", payload => {
-    io.to(payload.userToSignal).emit('user joined', { signal: payload.signal, callerID: payload.callerID });
-  });
-
-  socket.on("returning signal", payload => {
-    io.to(payload.callerID).emit('receiving returned signal', { signal: payload.signal, id: socket.id });
-  });
-
-  socket.on('disconnect', () => {
-    const roomID = socketToRoom[socket.id];
-    let room = users[roomID];
-    if (room) {
-      room = room.filter(id => id !== socket.id);
-      users[roomID] = room;
-    }
-  });
-
 });
 
-server.listen(process.env.PORT || 8000, () => console.log('server is running on port 8000'));
+http.listen(port, () => {
+  console.log(`listening on port ${port}`);
+});
