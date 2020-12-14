@@ -18,8 +18,8 @@ module.exports = (sequelize, DataTypes) => {
   };
   Room.init({
     name: DataTypes.STRING,
-    TeamOneId: DataTypes.STRING,
-    TeamTwoId: DataTypes.STRING
+    TeamOneId: DataTypes.INTEGER,
+    TeamTwoId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Room',

@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
   Leaderboard.init({
     juara: DataTypes.STRING,
     kalah: DataTypes.STRING,
-    RoomId: DataTypes.STRING
+    RoomId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Leaderboard',
