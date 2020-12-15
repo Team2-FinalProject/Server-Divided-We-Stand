@@ -2,7 +2,8 @@ const app = require("express")();
 const cors = require("cors");
 const http = require("http").createServer(app);
 const port = process.env.PORT || 3000;
-const io = require("socket.io")(http);
+const io = require("socket.io")(http)
+// const { User } = require("./models") // integrasi database
 
 app.use(cors());
 
@@ -31,11 +32,17 @@ io.on("connection", (socket) => {
     socket.join(payload.roomName, () => {
       const roomFind = rooms.find(e => e.id === payload.idRoom)
       console.log(roomFind, "<< room di join room server")
-      if(roomFind.teamOne.length === 3) {
-        roomFind.teamTwo.push(payload.username)
-      } else {
+      // if(roomFind.teamOne.length === 3) {
+      //   roomFind.teamTwo.push(payload.username)
+      // } else {
+      //   roomFind.teamOne.push(payload.username)
+      // }
+      if(payload.team === "teamOne") {
         roomFind.teamOne.push(payload.username)
+      } else if (payload.team === "teamTwo") {
+        roomFind.teamTwo.push(payload.username)
       }
+
       roomFind.isActive = true
       activeRoom.push(roomFind)
       io.sockets.in(payload.roomName).emit('roomDetail', roomFind)
@@ -56,6 +63,11 @@ io.on("connection", (socket) => {
     if(action.type === 'server/players'){
       console.log('Got hello data!', action.data);
       onlineUsers.push(action.data)
+      // //insert user online ke db
+      // User.create({
+      //   username: action.data.username
+      // }).then(_ => console.log).catch(err => console.log(err))
+
       socket.emit('action', { type:'SET_PLAYERS', payload: onlineUsers });
     } else if ( action.type === 'server/online') {
       socket.emit('action', {type:'SET_PLAYERS', payload: onlineUsers});
@@ -76,3 +88,5 @@ io.on("connection", (socket) => {
 http.listen(port, () => {
   console.log(`listening on port ${port}`);
 });
+
+module.exports = app
