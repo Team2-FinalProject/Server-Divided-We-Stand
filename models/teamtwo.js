@@ -15,9 +15,30 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   TeamTwo.init({
-    player1: DataTypes.STRING,
-    player2: DataTypes.STRING,
-    player3: DataTypes.STRING
+    player1: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          message: "Player cannot be empty"
+        }
+      }
+    },
+    player2: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          message: "Player cannot be empty"
+        }
+      }
+    },
+    player3: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          message: "Player cannot be empty"
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'TeamTwo',

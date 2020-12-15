@@ -15,8 +15,20 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Leaderboard.init({
-    juara: DataTypes.STRING,
-    kalah: DataTypes.STRING,
+    juara: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          message: "Column Juara cannot be empty"
+        }
+      }
+    },
+    kalah: {
+      type: DataTypes.STRING,
+      validate: {
+        message: "Column kalah cannot be empty"
+      }
+    },
     RoomId: DataTypes.INTEGER
   }, {
     sequelize,
