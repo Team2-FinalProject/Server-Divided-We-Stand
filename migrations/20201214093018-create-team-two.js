@@ -14,9 +14,6 @@ module.exports = {
       player2: {
         type: Sequelize.STRING
       },
-      player3: {
-        type: Sequelize.STRING
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

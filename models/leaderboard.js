@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   };
   Leaderboard.init({
     juara: {
-      type: DataTypes.STRING,
+      type: DataTypes.ARRAY(DataTypes.STRING),
       validate: {
         notEmpty: {
           message: "Column Juara cannot be empty"
@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     kalah: {
-      type: DataTypes.STRING,
+      type: DataTypes.ARRAY(DataTypes.STRING),
       validate: {
         message: "Column kalah cannot be empty"
       }

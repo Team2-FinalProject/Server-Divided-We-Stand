@@ -31,14 +31,6 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    player3: {
-      type: DataTypes.STRING,
-      validate: {
-        notEmpty: {
-          message: "Player cannot be empty"
-        }
-      }
-    }
   }, {
     sequelize,
     modelName: 'TeamTwo',

@@ -22,7 +22,7 @@ describe("Post Team", () => {
       })
   })
 
-  it("Add player teamTwo successfully Leaderboards", (done) => {
+  it("Add player teamTwo successfully", (done) => {
     const obj = {
       player1: "Rivari",
       player2: "Yeska",
