@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Room.hasMany(models.TeamOne)
       Room.hasMany(models.TeamTwo)
-      Room.belongsTo(models.Leaderboard)
+      Room.belongsTo(models.Board)
     }
   };
   Room.init({

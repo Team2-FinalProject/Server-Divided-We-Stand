@@ -11,25 +11,42 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Leaderboard.belongsTo(models.Room)
     }
   };
   Leaderboard.init({
-    juara: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
+    player_1: {
+      type: DataTypes.STRING,
       validate: {
         notEmpty: {
-          message: "Column Juara cannot be empty"
+          message: "Player 1 cannot be empty"
         }
       }
     },
-    kalah: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
+    player_2: {
+      type: DataTypes.STRING,
       validate: {
-        message: "Column kalah cannot be empty"
+        notEmpty: {
+          message: "Player 2 cannot be empty"
+        }
       }
     },
-    RoomId: DataTypes.INTEGER
+    score_player1: {
+      type: DataTypes.INTEGER,
+      validate: {
+        isNumeric: {
+          message: "Score must be number"
+        }
+      }
+    },
+    score_player2: {
+      type: DataTypes.INTEGER,
+      validate: {
+        isNumeric: {
+          message: "Score must be number"
+        }
+      }
+    },
+    room: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Leaderboard',

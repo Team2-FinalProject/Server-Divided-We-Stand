@@ -2,6 +2,13 @@ const request = require('supertest')
 const app = require('../app')
 const { TeamOne, sequelize } = require('../models/index')
 
+// Leaderboards
+// player_satu
+// player_dua
+// score_player1
+// score_player2
+// room
+
 describe("Post Team", () => {
   it("Add player teamOne successfully", (done) => {
     const obj = {

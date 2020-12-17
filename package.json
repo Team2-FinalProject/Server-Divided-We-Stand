@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Team2-FinalProject/Server-Divided-We-Stand#readme",
   "dependencies": {
+    "axios": "^0.21.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mocha": "^8.2.1",
