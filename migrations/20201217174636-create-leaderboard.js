@@ -8,14 +8,20 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      juara: {
+      player_satu: {
         type: Sequelize.STRING
       },
-      kalah: {
+      player_dua: {
         type: Sequelize.STRING
       },
-      RoomId: {
+      score_player1: {
         type: Sequelize.INTEGER
+      },
+      score_player2: {
+        type: Sequelize.INTEGER
+      },
+      room: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

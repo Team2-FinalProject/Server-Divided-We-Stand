@@ -1,11 +1,17 @@
-const app = require("express")();
+const express = require("express");
+const app = express();
 const cors = require("cors");
 const http = require("http").createServer(app);
 const port = process.env.PORT || 3000;
 const io = require("socket.io")(http);
-// const { User } = require("./models") // integrasi database
+const { Leaderboard } = require("./models/index"); // integrasi database
+const routes = require("./routes/routes");
 
 app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.use("/leaderboards", routes);
 
 let rooms = [];
 let onlineUsers = [];
@@ -219,11 +225,12 @@ io.on("connection", (socket) => {
       room: data.room,
       user: user,
     };
+    // console.log(user)
     // console.log(payload, "ini data yg akan dikirim")
     socket.broadcast.emit("updateBone", payload);
   });
 
-  socket.on("score", (payload) => {
+  socket.on("score", async (payload) => {
     let room = activeRoom.find((e) => e.id === payload.room.id);
     if (payload.team === "teamOne") {
       console.log(room, "ini room pl 1");
@@ -232,6 +239,29 @@ io.on("connection", (socket) => {
       room.scoreTeamTwo = payload.score;
     }
     console.log(room, "ini room after add pl 1");
+    let count = room.scoreTeamOne + room.scoreTeamTwo;
+    console.log(count)
+    if (count === 3) {
+      // console.log("this")
+      // console.log(room, "ini room")
+      const board = await Leaderboard.findOne({
+        where: {
+          room: room.name
+        }
+      })
+      let datas = {
+        player_satu: room.teamOne[0],
+        player_dua: room.teamTwo[0],
+        score_player1: room.scoreTeamOne,
+        score_player2: room.scoreTeamTwo,
+        room: room.name,
+      }
+      console.log(board)
+      if(board === null || !board) {
+        const leader = await Leaderboard.create(datas)
+      }
+      // Leaderboard.create(datas).then(_ => console.log).catch(console.log)
+    }
   });
 
   // socket.on('scoreP2', payload => {
